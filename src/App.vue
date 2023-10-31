@@ -1,42 +1,38 @@
 <template>
-  <div class="black-bg" v-if="모달창열렸니 == true">
-    <div class="white-bg">
-      <h4>상세페이지임</h4>
-      <h4>상세페이지 내용임</h4>
-      <button @click="모달창열렸니 = false">닫기</button>
-    </div>
-  </div>
+  <Modal :원룸들="원룸들" :누른거="누른거" :모달창열렸니="모달창열렸니" />
 
   <div class="menu">
-    <a v-for="(menu, i) in 메뉴들" :key="i"> {{ menu }} </a>
+    <a v-for="a in 메뉴들" :key="a"> {{ a }} </a>
   </div>
 
-  <div v-for="(a, i) in 원룸들" :key="i">
+  <Discount v-bind="오브젝트" :이름="오브젝트.name" :나이="오브젝트.age" />
+
+  <Card :원룸="원룸들[i]" v-for="(Card, i) in 원룸들" :key="Card" />
+  <!-- <Card :원룸="원룸들[1]" />
+  <Card :원룸="원룸들[2]" />
+  <Card :원룸="원룸들[3]" />
+  <Card :원룸="원룸들[4]" />
+  <Card :원룸="원룸들[5]" /> -->
+
+  <!-- <div v-for="(a, i) in 원룸들" :key="i">
     <img :src="원룸들[0].image" class="room-img" />
-    <h4>{{ 원룸들[0].title }}</h4>
-    <P>{{ 원룸들[0].price }}원</P>
-    <!-- <button @click="신고수[0]++">허위매물신고</button>
-    <span>신고수 : {{ 신고수[0] }}</span> -->
-  </div>
-  <div>
-    <img :src="원룸들[1].image" class="room-img" />
-    <h4>{{ 원룸들[1].title }}</h4>
-    <P> {{ 원룸들[1].price }}</P>
-  </div>
-  <div>
-    <img :src="원룸들[2].image" class="room-img" />
-    <h4>{{ 원룸들[2].title }}</h4>
-    <P> {{ 원룸들[2].price }}</P>
-  </div>
+    <h4 @click="모달창열렸니 = true" 누른거="i">{{ a.title }}</h4>
+    <p>{{ a.price }}</p>
+  </div> -->
 </template>
 
 <script>
 import data from "./assets/oneroom.js";
+import DiscountExample from "./Discount.vue";
+import ModalComponent from "./Modal.vue";
+import CardComponent from "./Card.vue";
 
 export default {
   name: "App",
   data() {
     return {
+      오브젝트: { name: "kim", age: 20 },
+      누른거: 0,
       원룸들: data,
       모달창열렸니: false,
       신고수: [0, 0, 0],
@@ -45,13 +41,17 @@ export default {
     };
   },
 
-  // methods: {
-  //   increase() {
-  //     this.신고수 += 1;
-  //   },
-  // },
+  methods: {
+    increase() {
+      this.신고수 += 1;
+    },
+  },
 
-  components: {},
+  components: {
+    Discount: DiscountExample,
+    Modal: ModalComponent,
+    Card: CardComponent,
+  },
 };
 </script>
 
@@ -61,6 +61,12 @@ body {
 }
 div {
   box-sizing: border-box;
+}
+.discount {
+  background: rgb(138, 149, 201);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
 }
 .black-bg {
   width: 100%;
