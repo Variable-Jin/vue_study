@@ -1,13 +1,32 @@
 <template>
-  <Modal :원룸들="원룸들" :누른거="누른거" :모달창열렸니="모달창열렸니" />
+  <transition name="fade">
+    <Modal
+      @closeModal="모달창열렸니 = false"
+      :원룸들="원룸들"
+      :누른거="누른거"
+      :모달창열렸니="모달창열렸니"
+    />
+  </transition>
 
   <div class="menu">
     <a v-for="a in 메뉴들" :key="a"> {{ a }} </a>
   </div>
 
-  <Discount v-bind="오브젝트" :이름="오브젝트.name" :나이="오브젝트.age" />
+  <!-- <Discount v-if="showDiscount == true" /> -->
+  <Discount v-if="amountTime == true" />
 
-  <Card :원룸="원룸들[i]" v-for="(Card, i) in 원룸들" :key="Card" />
+  <button @click="priceSort">가격순정렬</button>
+  <button @click="sortBack">되돌리기</button>
+
+  <Card
+    @openModal="
+      모달창열렸니 = true;
+      누른거 = $event;
+    "
+    :원룸="원룸들[i]"
+    v-for="(card, i) in 원룸들"
+    :key="card"
+  />
   <!-- <Card :원룸="원룸들[1]" />
   <Card :원룸="원룸들[2]" />
   <Card :원룸="원룸들[3]" />
@@ -31,6 +50,9 @@ export default {
   name: "App",
   data() {
     return {
+      amountTime: true,
+      // showDiscount: true,
+      원룸들오리지널: [...data],
       오브젝트: { name: "kim", age: 20 },
       누른거: 0,
       원룸들: data,
@@ -45,7 +67,22 @@ export default {
     increase() {
       this.신고수 += 1;
     },
+    sortBack() {
+      this.원룸들 = [...this.원룸들오리지널];
+    },
+
+    priceSort() {
+      this.원룸들.sort(function (a, b) {
+        return a.price - b.price;
+      });
+    },
   },
+
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.showDiscount = false;
+  //   }, 3000);
+  // },
 
   components: {
     Discount: DiscountExample,
@@ -56,6 +93,27 @@ export default {
 </script>
 
 <style>
+/* 등장 */
+.fade-enter-from {
+  transform: translateY(-1000px);
+}
+.fade-enter-active {
+  transition: all 1s;
+}
+.fade-enter-to {
+  transform: translateY(0px);
+}
+/* 퇴장 */
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: all 1s;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+
 body {
   margin: 0;
 }
